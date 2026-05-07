@@ -1,6 +1,6 @@
 import type { Product, CreateProductInput } from "../types/Product";
 
-const BASE_URL = import.meta.env.VITE_API_URL ?? "https://minimarket-three.vercel.app/api/v1";
+const BASE_URL = import.meta.env.VITE_API_URL ?? "https://minimarket-three.vercel.app";
 
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
