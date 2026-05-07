@@ -1,17 +1,14 @@
 import type { Product, CreateProductInput } from "../types/Product";
 
-// si hay una variable de entorno la uso, si no apunto a la ruta relativa (el proxy de vite lo redirige al backend)
-const BASE_URL = import.meta.env.VITE_API_URL ?? "/api/v1";
+const BASE_URL = import.meta.env.VITE_API_URL ?? "https://minimarket-three.vercel.app/api/v1";
 
-// función genérica para no repetir el mismo fetch en cada llamada
-// el <T> es para decirle a TypeScript qué tipo de dato espero que devuelva
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
 
-  // si la respuesta no es ok lanzo un error con el mensaje que devuelve el servidor
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new Error((body as { error?: string }).error ?? `HTTP ${res.status}`);
