@@ -10,8 +10,8 @@ MiniMarket es una aplicación web completa construida con React + TypeScript + T
 
 | Servicio | URL |
 |----------|-----|
-| Frontend (Vercel) | _pendiente de despliegue_ |
-| Backend (Vercel) | _pendiente de despliegue_ |
+| Frontend (Vercel) | https://minimarket-front-kohl.vercel.app/ |
+| Backend (Vercel) | https://minimarket-three.vercel.app/ |
 | Tablero Kanban (Trello) | https://trello.com/b/ywnVxrTd/fullstack-app |
 
 ## Características
