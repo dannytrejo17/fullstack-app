@@ -1,13 +1,46 @@
 import { Router } from "express";
 import * as productController from "../controllers/productController.js";
+import {
+  validateProduct,
+  validateIdParam,
+  validateProductExists
+} from "../middleware/validationMiddleware.js";
 
 const router = Router();
 
-// cada ruta apunta a una función del controlador, aquí no hay lógica
+// GET all
 router.get("/", productController.getAll);
-router.get("/:id", productController.getOne);
-router.post("/", productController.create);
-router.patch("/:id", productController.update);
-router.delete("/:id", productController.remove);
+
+// GET one
+router.get(
+  "/:id",
+  validateIdParam,
+  validateProductExists,
+  productController.getOne
+);
+
+// CREATE
+router.post(
+  "/",
+  validateProduct,
+  productController.create
+);
+
+// UPDATE
+router.patch(
+  "/:id",
+  validateIdParam,
+  validateProductExists,
+  validateProduct,
+  productController.update
+);
+
+// DELETE
+router.delete(
+  "/:id",
+  validateIdParam,
+  validateProductExists,
+  productController.remove
+);
 
 export default router;
