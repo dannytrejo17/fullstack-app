@@ -47,6 +47,60 @@ export const validateProduct = (req, res, next) => {
   next();
 };
 
+export const validateProductUpdate = (req, res, next) => {
+  const { name, price, description, category } = req.body;
+  const allowedFields = ["name", "price", "description", "category"];
+  const providedFields = Object.keys(req.body);
+
+  if (providedFields.length === 0) {
+    const err = new Error("Debes enviar al menos un campo para actualizar");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  const hasInvalidField = providedFields.some(
+    (field) => !allowedFields.includes(field)
+  );
+  if (hasInvalidField) {
+    const err = new Error("Solo puedes actualizar name, price, description y category");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  if (
+    name !== undefined &&
+    (typeof name !== "string" || name.trim().length === 0)
+  ) {
+    const err = new Error("name debe ser un string no vacío");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  if (price !== undefined) {
+    const parsedPrice = Number(price);
+    if (Number.isNaN(parsedPrice) || parsedPrice <= 0) {
+      const err = new Error("price debe ser un número mayor a 0");
+      err.statusCode = 400;
+      return next(err);
+    }
+    req.body.price = parsedPrice;
+  }
+
+  if (description !== undefined && typeof description !== "string") {
+    const err = new Error("description debe ser un string");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  if (category !== undefined && typeof category !== "string") {
+    const err = new Error("category debe ser un string");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  next();
+};
+
 
 export const validateIdParam = (req, res, next) => {
   const id = Number(req.params.id);

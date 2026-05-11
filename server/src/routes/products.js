@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as productController from "../controllers/productController.js";
 import {
   validateProduct,
+  validateProductUpdate,
   validateIdParam,
   validateProductExists
 } from "../middleware/validationMiddleware.js";
@@ -31,7 +32,7 @@ router.patch(
   "/:id",
   validateIdParam,
   validateProductExists,
-  validateProduct,
+  validateProductUpdate,
   productController.update
 );
 

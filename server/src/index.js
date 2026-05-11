@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { ALLOWED_ORIGIN } from "./config/index.js";
+import { ALLOWED_ORIGIN, PORT } from "./config/index.js";
 import productRoutes from "./routes/products.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
@@ -18,5 +18,11 @@ app.use((req, res) => {
 });
 
 app.use(errorHandler);
+
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
 
 export default app;

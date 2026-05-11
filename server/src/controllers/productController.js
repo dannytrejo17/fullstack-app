@@ -24,7 +24,7 @@ export const create = (req, res, next) => {
 
     const product = productService.createProduct({
       name,
-      price: Number(price),
+      price,
       description: description || "",
       category: category || "General",
     });
@@ -37,7 +37,7 @@ export const create = (req, res, next) => {
 
 export const update = (req, res, next) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.product.id;
     const updated = productService.updateProduct(id, req.body);
     res.json(updated);
   } catch (err) {
@@ -47,7 +47,7 @@ export const update = (req, res, next) => {
 
 export const remove = (req, res, next) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.product.id;
     productService.deleteProduct(id);
     res.status(204).send();
   } catch (err) {
