@@ -1,8 +1,8 @@
 let products = [
-  { id: 1, name: "iPhone 13", price: 700, description: "Smartphone Apple en buen estado", category: "Electrónica" },
-  { id: 2, name: "Zapatillas Nike", price: 120, description: "Talla 42, usadas pocas veces", category: "Ropa" },
-  { id: 3, name: "Portátil Dell", price: 900, description: "Intel i7, 16GB RAM, SSD 512GB", category: "Electrónica" },
-  { id: 4, name: "Bicicleta de montaña", price: 350, description: "21 velocidades, ruedas 26\"", category: "Deporte" },
+  { id: 1, name: "iPhone 13", price: 700, description: "Smartphone Apple en buen estado", category: "Electrónica",province: "Barcelona", city: "Hospitalet de Llobregat",  imageUrl: "/productos/1.jpg" },
+  { id: 2, name: "Zapatillas Nike", price: 120, description: "Talla 42, usadas pocas veces", category: "Ropa",province: "Barcelona", city: "Terrassa", imageUrl: "/productos/2.jpg" },
+  { id: 3, name: "Portátil Dell", price: 900, description: "Intel i7, 16GB RAM, SSD 512GB", category: "Electrónica",province: "Barcelona", city: "Sabadell", imageUrl: "/productos/3.jpg" },
+  { id: 4, name: "Bicicleta de montaña", price: 350, description: "21 velocidades, ruedas 26\"", category: "Deporte",province: "Barcelona", city: "Badalona", imageUrl: "/productos/4.jpg" },
 ];
 
 let nextId = 5;
@@ -13,6 +13,14 @@ export const getProductById = (id) => products.find((p) => p.id === id) || null;
 
 export const createProduct = (data) => {
   const product = { id: nextId++, ...data };
+  if (
+    product.imageUrl === undefined ||
+    (typeof product.imageUrl === "string" && !product.imageUrl.trim())
+  ) {
+    delete product.imageUrl;
+  } else {
+    product.imageUrl = product.imageUrl.trim();
+  }
   products.push(product);
   return product;
 };

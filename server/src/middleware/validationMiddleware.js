@@ -2,7 +2,7 @@ import * as productService from "../services/productService.js";
 
 
 export const validateProduct = (req, res, next) => {
-  const { name, price, description, category } = req.body;
+  const { name, price, description, category, province, city, imageUrl } = req.body;
 
 
   if (
@@ -41,6 +41,27 @@ export const validateProduct = (req, res, next) => {
     return next(err);
   }
 
+  if (
+    province == null ||
+    typeof province !== "string" ||
+    province.trim().length === 0
+  ) {
+    const err = new Error("province es obligatorio y debe ser un string no vacío");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  if (city == null || typeof city !== "string" || city.trim().length === 0) {
+    const err = new Error("city es obligatorio y debe ser un string no vacío");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  if (imageUrl !== undefined && typeof imageUrl !== "string") {
+    const err = new Error("imageUrl debe ser un string");
+    err.statusCode = 400;
+    return next(err);
+  }
 
   req.body.price = parsedPrice;
 
@@ -48,8 +69,16 @@ export const validateProduct = (req, res, next) => {
 };
 
 export const validateProductUpdate = (req, res, next) => {
-  const { name, price, description, category } = req.body;
-  const allowedFields = ["name", "price", "description", "category"];
+  const { name, price, description, category, province, city, imageUrl } = req.body;
+  const allowedFields = [
+    "name",
+    "price",
+    "description",
+    "category",
+    "province",
+    "city",
+    "imageUrl",
+  ];
   const providedFields = Object.keys(req.body);
 
   if (providedFields.length === 0) {
@@ -62,7 +91,9 @@ export const validateProductUpdate = (req, res, next) => {
     (field) => !allowedFields.includes(field)
   );
   if (hasInvalidField) {
-    const err = new Error("Solo puedes actualizar name, price, description y category");
+    const err = new Error(
+      "Solo puedes actualizar name, price, description, category, province, city e imageUrl"
+    );
     err.statusCode = 400;
     return next(err);
   }
@@ -94,6 +125,24 @@ export const validateProductUpdate = (req, res, next) => {
 
   if (category !== undefined && typeof category !== "string") {
     const err = new Error("category debe ser un string");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  if (province !== undefined && typeof province !== "string") {
+    const err = new Error("province debe ser un string");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  if (city !== undefined && typeof city !== "string") {
+    const err = new Error("city debe ser un string");
+    err.statusCode = 400;
+    return next(err);
+  }
+
+  if (imageUrl !== undefined && typeof imageUrl !== "string") {
+    const err = new Error("imageUrl debe ser un string");
     err.statusCode = 400;
     return next(err);
   }
