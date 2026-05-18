@@ -9,7 +9,7 @@ const nav = [
   { href: "/", label: "Inicio" },
   { href: "/productos", label: "Productos" },
   { href: "/publicar", label: "Publicar" },
-  { href: "/sobre", label: "Sobre" },
+  { href: "/sobre", label: "Sobre nosotros" },
   { href: "/contacto", label: "Contacto" },
 ];
 
