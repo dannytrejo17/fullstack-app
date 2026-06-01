@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { withAuth } from "next-auth/middleware";
 
 /** Cabeceras de seguridad en todas las rutas coincidentes. */
-export function middleware(request: NextRequest) {
+export function applySecurityHeaders(request: NextRequest) {
   void request.nextUrl;
   const res = NextResponse.next();
   res.headers.set("X-Frame-Options", "DENY");
@@ -15,6 +16,20 @@ export function middleware(request: NextRequest) {
   return res;
 }
 
+export default withAuth(
+  function middleware(request: NextRequest) {
+    return applySecurityHeaders(request);
+  },
+  {
+    pages: {
+      signIn: "/login",
+    },
+  }
+);
+
+
+
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  // Fase 7: rutas privadas. El resto (/, /productos, /login, /register…) es público.
+  matcher: ["/dashboard/:path*", "/publicar/:path*"],
 };

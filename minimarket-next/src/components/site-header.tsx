@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "@/providers/cart-provider";
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const nav = [
   { href: "/", label: "Inicio" },
@@ -16,6 +18,7 @@ const nav = [
 export function SiteHeader() {
   const pathname = usePathname();
   const { cart } = useCart();
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
 
   const active = (href: string) =>
@@ -58,12 +61,31 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <Link
-          href="/publicar"
-          className="hidden md:block bg-amber-400 hover:bg-amber-500 text-zinc-900 font-semibold px-5 py-2 rounded-xl text-sm transition-colors shadow"
-        >
-          + Publicar
-        </Link>
+
+        <div className="hidden md:flex items-center gap-2">
+          {session ? (
+            <button
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/" })}
+              className="bg-zinc-800 hover:bg-zinc-700 text-white font-semibold px-4 py-2 rounded-xl text-sm transition-colors"
+            >
+              Cerrar sesión
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold text-white transition-colors hover:border-amber-400/50 hover:bg-white/15 hover:text-amber-400"
+            >
+              Entrar
+            </Link>
+          )}
+          <Link
+            href="/publicar"
+            className="bg-amber-400 hover:bg-amber-500 text-zinc-900 font-semibold px-5 py-2 rounded-xl text-sm transition-colors shadow"
+          >
+            + Publicar
+          </Link>
+        </div>
 
         <button
           type="button"
@@ -113,6 +135,26 @@ export function SiteHeader() {
               </Link>
             )
           )}
+            {session ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  void signOut({ callbackUrl: "/" });
+                }}
+                className="text-sm py-2 px-3 rounded-lg text-white hover:bg-zinc-800 text-left"
+              >
+                Cerrar sesión
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setOpen(false)}
+                className="rounded-lg bg-amber-400 py-2 px-3 text-sm font-semibold text-zinc-900 text-center hover:bg-amber-500"
+              >
+                Entrar
+              </Link>
+            )}
           </div>
         </div>
       )}
