@@ -4,8 +4,21 @@ import { ProductExplorer } from "@/components/product-explorer";
 import { ProductGridSkeleton } from "@/components/product-grid-skeleton";
 import { fetchProducts } from "@/lib/api";
 async function HomeProducts() {
-  const products = await fetchProducts();
-  return <ProductExplorer products={products} />;
+  try {
+    const products = await fetchProducts();
+    return <ProductExplorer products={products} />;
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "No se pudieron cargar los productos.";
+    return (
+      <div className="rounded-2xl bg-white/10 px-6 py-10 text-center text-white">
+        <p className="font-medium">No se pudieron cargar los productos</p>
+        <p className="mt-2 text-sm text-white/70">{message}</p>
+      </div>
+    );
+  }
 }
 
 export default function HomePage() {

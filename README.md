@@ -4,18 +4,23 @@
 
 ## Descripción breve
 
-MiniMarket es una aplicación web completa construida con React + TypeScript + Tailwind en el frontend y Node.js + Express en el backend. Permite a los usuarios gestionar un catálogo de productos con operaciones CRUD, carrito de compras y validación de datos en tiempo real.
+MiniMarket es una aplicación web completa con **Node.js + Express** en el backend y dos frontends: la versión original con **React + Vite** (`frontend/`) y la versión actual con **Next.js 15** (`minimarket-next/`), que cubre las fases comercial (App Router, ISR, SEO) y de autenticación (NextAuth, OAuth GitHub, credenciales Firebase, middleware).
+
+Permite gestionar un catálogo de productos con operaciones CRUD, carrito de compra, validación de datos, formulario de contacto con Server Action y acceso privado al dashboard para usuarios autenticados.
 
 ## Despliegue
 
 | Servicio | URL |
 |----------|-----|
-| Frontend (Vercel) | https://minimarket-front-kohl.vercel.app/ |
-| Backend (Vercel) | https://minimarket-three.vercel.app/ |
+| Frontend Next.js (Vercel) | https://minimarket-next.vercel.app/ |
+| Backend Express (Vercel) | https://minimarket-api-next.vercel.app/ |
+| Frontend Vite (legacy) | https://minimarket-front-kohl.vercel.app/ |
+| Backend Vite (legacy) | https://minimarket-three.vercel.app/ |
 | Tablero Kanban (Trello) | https://trello.com/b/ywnVxrTd/fullstack-app |
 
 ## Características
 
+### Catálogo y UX
 - Listar, crear, actualizar y eliminar productos
 - Carrito de compra con estado global (Context API)
 - Búsqueda y filtrado de productos en tiempo real
@@ -23,94 +28,146 @@ MiniMarket es una aplicación web completa construida con React + TypeScript + T
 - API REST con arquitectura por capas
 - Diseño responsive con Tailwind CSS
 
+### Next.js (Fase 6)
+- App Router, Server Components e ISR (`revalidate`, tags)
+- Rutas dinámicas `/productos/[id]` con `generateStaticParams` y metadata SEO
+- Optimización de imágenes con `next/image` (`priority`, `blur`)
+- Server Action en formulario de contacto (validación servidor)
+- Server Action en publicar producto con `revalidateTag`
+- Middleware con cabeceras de seguridad
+- Suspense, skeletons y `error.tsx`
+
+### Autenticación (Fase 7)
+- NextAuth con OAuth GitHub y credenciales (Firebase Auth)
+- Páginas `/login`, `/register` y `/dashboard`
+- Middleware protegiendo `/dashboard` y `/publicar`
+- Documentación en `docs/seguridad/`
+
 ## Tecnologías
 
-### Frontend
+### Frontend (Next.js — principal)
+
+| Tecnología | Uso |
+|-----------|-----|
+| Next.js 15 | App Router, SSR/SSG, Server Actions |
+| React 19 | Librería de UI |
+| TypeScript | Tipado estático |
+| Tailwind CSS | Estilos responsive |
+| Shadcn UI | Componentes de formulario y UI |
+| NextAuth.js | Sesiones, OAuth y credenciales |
+| Firebase Auth | Registro e inicio con email/contraseña |
+
+### Frontend (Vite — versión original)
 
 | Tecnología | Uso |
 |-----------|-----|
 | React | Librería de UI |
-| TypeScript | Tipado estático en JavaScript |
-| Tailwind CSS | Estilos y diseño responsive |
+| TypeScript | Tipado estático |
+| Tailwind CSS | Estilos responsive |
+| Vite | Bundler y dev server |
+| React Router | Navegación entre páginas |
 
 ### Backend
 
 | Tecnología | Uso |
 |-----------|-----|
-| Express | Framework web minimalista |
-| Node.js | Runtime de JavaScript en servidor |
+| Express | Framework web |
+| Node.js | Runtime en servidor |
 | JavaScript | Lógica del servidor |
+| CORS | Orígenes permitidos vía `FRONTEND_URL` |
 
 ### Auxiliares
 
 | Tecnología | Uso |
 |-----------|-----|
-| Vite | Bundler y dev server rápido |
-| React Router | Navegación entre páginas |
 | Fetch API | Cliente HTTP tipado |
+| Vercel | Despliegue frontend y backend |
 
 ## Estructura del proyecto
 
 ```
 fullstack-app/
-├── frontend/                  # React + TypeScript + Tailwind (Vite)
-│   ├── index.html             # HTML semántico
+├── minimarket-next/           # Next.js 15 — Fase 6 + Fase 7 (principal)
 │   ├── package.json
-│   ├── vite.config.ts         # Configuración de Vite
-│   ├── tsconfig.json
+│   ├── next.config.ts
+│   ├── .env.example
 │   └── src/
-│       ├── App.tsx            # Componente raíz
-│       ├── main.tsx           # Punto de entrada
-│       ├── api/
-│       │   └── client.ts      # Cliente HTTP tipado
-│       ├── components/        # Componentes reutilizables
-│       ├── context/           # CartContext (estado global)
-│       ├── hooks/             # useProducts (custom hook)
-│       ├── pages/             # Páginas de la app
-│       └── types/             # Tipos TypeScript
+│       ├── app/               # App Router (páginas, layout, API auth)
+│       │   ├── api/auth/[...nextauth]/
+│       │   ├── contacto/
+│       │   ├── dashboard/
+│       │   ├── login/
+│       │   ├── productos/[id]/
+│       │   ├── publicar/
+│       │   └── register/
+│       ├── actions/           # Server Actions (contacto, publicar)
+│       ├── components/        # UI, formularios, grid
+│       ├── lib/               # API client, auth, Firebase
+│       ├── middleware.ts      # Protección de rutas + cabeceras
+│       └── providers/         # SessionProvider, CartProvider
+├── frontend/                  # React + Vite (versión original)
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── src/
+│       ├── App.tsx
+│       ├── api/client.ts
+│       ├── components/
+│       ├── context/
+│       ├── hooks/
+│       └── pages/
 ├── server/                    # Node.js + Express
 │   ├── package.json
-│   ├── src/
-│   │   ├── index.js           # Punto de entrada del servidor
-│   │   ├── config/            # Configuración del servidor
-│   │   ├── routes/            # Rutas de API
-│   │   ├── controllers/       # Controladores
-│   │   ├── middleware/        # Middlewares de validación
-│   │   └── services/          # Lógica de negocio
-│   └── README.md              # Documentación del backend
+│   └── src/
+│       ├── index.js
+│       ├── config/
+│       ├── routes/
+│       ├── controllers/
+│       ├── middleware/
+│       └── services/
 ├── docs/                      # Documentación del proyecto
-│   ├── agile.md               # Metodologías Agile
-│   ├── idea.md                # Idea del proyecto
-│   ├── design.md              # Arquitectura y diseño
-│   ├── components.md          # Documentación de componentes
-│   ├── hooks.md               # Hooks de React
-│   ├── context.md             # Context API
-│   ├── routing.md             # Rutas de la app
-│   ├── forms.md               # Formularios
-│   ├── api.md                 # Endpoints de la API
-│   ├── api-client.md          # Capa de red frontend
-│   ├── testing.md             # Testing manual
-│   ├── deployment.md          # Despliegue
-│   ├── project-management.md  # Gestión del proyecto
-│   └── retrospective.md       # Retrospectiva final
+│   ├── agile.md
+│   ├── idea.md
+│   ├── design.md
+│   ├── components.md
+│   ├── hooks.md
+│   ├── context.md
+│   ├── routing.md
+│   ├── forms.md
+│   ├── api.md
+│   ├── api-client.md
+│   ├── testing.md
+│   ├── deployment.md
+│   ├── project-management.md
+│   ├── retrospective.md
+│   └── seguridad/             # Fase 7
+│       ├── oauth.md
+│       ├── middleware.md
+│       └── credenciales.md
 └── README.md
-
 ```
 
 ## Descargar y ejecutar
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/user/fullstack-app.git
+git clone https://github.com/dannytrejo17/fullstack-app.git
 cd fullstack-app
 
-# Instalar y ejecutar backend
+# Instalar y ejecutar backend (obligatorio para el catálogo)
 cd server
 npm install
 npm run dev
 # Servidor en http://localhost:3001
 
-# En otra terminal: instalar y ejecutar frontend
+# En otra terminal: Next.js (recomendado — Fase 6 + 7)
+cd minimarket-next
+cp .env.example .env.local   # completar variables (ver .env.example)
+npm install
+npm run dev
+# App en http://localhost:3000
+
+# Alternativa: frontend Vite (versión original)
 cd frontend
 npm install
 npm run dev
@@ -119,19 +176,33 @@ npm run dev
 
 ## Desplegar en Vercel
 
-### Frontend
+### Backend (Express)
 
-1. Conecta el repositorio en [vercel.com](https://vercel.com)
-2. Selecciona la carpeta `frontend` como raíz del proyecto
-3. Vercel detecta Vite automáticamente
-4. Configura la variable de entorno `VITE_API_URL` con la URL del backend
-5. Despliega
+1. Crea un proyecto en [vercel.com](https://vercel.com) apuntando a la carpeta `server` (o raíz del repo si usas `vercel.json`).
+2. Configura el start command: `npm start`.
+3. Añade la variable `FRONTEND_URL` con la URL del frontend Next (ej. `https://minimarket-next.vercel.app`).
+4. Despliega y copia la URL pública (ej. `https://minimarket-api-next.vercel.app`).
 
-### Backend
+### Frontend Next.js (principal)
 
-1. Crea un nuevo proyecto en Vercel
-2. Conecta el repositorio y selecciona la carpeta `server` como raíz
-3. Configura el start command: `npm start`
-4. Despliega
-5. Copia la URL del backend y úsala en `VITE_API_URL` del frontend
+1. Crea otro proyecto en Vercel con raíz `minimarket-next`.
+2. Configura las variables de entorno (Production):
 
+| Variable | Ejemplo |
+|----------|---------|
+| `NEXT_PUBLIC_API_URL` | `https://minimarket-api-next.vercel.app/api/v1` |
+| `NEXT_PUBLIC_SITE_URL` | `https://minimarket-next.vercel.app` |
+| `NEXTAUTH_URL` | `https://minimarket-next.vercel.app` |
+| `NEXTAUTH_SECRET` | *(generar con `openssl rand -base64 32`)* |
+| `GITHUB_ID` / `GITHUB_SECRET` | OAuth App en GitHub |
+| `NEXT_PUBLIC_FIREBASE_*` | Consola Firebase |
+
+3. En GitHub OAuth App, callback: `https://minimarket-next.vercel.app/api/auth/callback/github`.
+4. Despliega.
+
+### Frontend Vite (legacy)
+
+1. Conecta el repositorio en Vercel.
+2. Selecciona la carpeta `frontend` como raíz.
+3. Configura `VITE_API_URL` con la URL del backend.
+4. Despliega.

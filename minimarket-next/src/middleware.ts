@@ -30,6 +30,5 @@ export default withAuth(
 
 
 export const config = {
-  // Fase 7: rutas privadas. El resto (/, /productos, /login, /register…) es público.
   matcher: ["/dashboard/:path*", "/publicar/:path*"],
 };

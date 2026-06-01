@@ -1,7 +1,7 @@
 import type { CreateProductInput, Product } from "@/types/product";
 
 const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
+  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ||
   "http://localhost:3001/api/v1";
 
 const FETCH_TIMEOUT_MS = 8_000;
